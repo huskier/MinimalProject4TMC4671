@@ -1358,6 +1358,9 @@ static void periodicJob_InMain(uint32 actualSystick)
 	static u32 lastSystick;
 	if (lastSystick != actualSystick)
 	{
+
+		HAL.IOs->config->setHigh(&HAL.IOs->pins->DIO19);
+
 		// do velocity / position ramping for every motor
 		for (motor = 0; motor < TMC4671_MOTORS; motor++)
 		{
@@ -1390,6 +1393,8 @@ static void periodicJob_InMain(uint32 actualSystick)
 			}
 		}
 		lastSystick = actualSystick;
+
+		HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
 	}
 }
 
@@ -1651,6 +1656,11 @@ int main(void)
 {
 	// Start all initialization routines
 	init();
+
+	HAL.IOs->config->toOutput(&HAL.IOs->pins->DIO19);   //for time testing......
+
+	HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
+
 	TMC4671_init();
 	configureMotor(0);
 	tmc4671_EncoderInitializationMode0(0, 6000);
