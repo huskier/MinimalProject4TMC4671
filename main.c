@@ -1608,8 +1608,6 @@ void tmc4671_EncoderInitializationMode0(u8 motor, u16 startVoltage)
 
 	uint32 reply;
 
-	dispString("In tmc4671_EncoderInitializationMode0 fuction...");
-
 	tmc4671_writeInt(motor, TMC4671_ABN_DECODER_MODE, 0x00001000); // Control bits how to handle ABN decoder signals.
 
 	tmc4671_writeInt(motor, TMC4671_MODE_RAMP_MODE_MOTION, 0x00000008);	 	// use UQ_UD_EXT for motion
@@ -1649,25 +1647,17 @@ void tmc4671_EncoderInitializationMode0(u8 motor, u16 startVoltage)
 	tmc4671_writeRegister16BitValue(motor, TMC4671_PHI_E_SELECTION, BIT_0_TO_15, last_Phi_E_Selection);
 }
 
-//Close loop testing......
 int main(void)
 {
 	// Start all initialization routines
 	init();
-
-	dispString("Before init......");
 	TMC4671_init();
-	dispString("After init......");
-	readChipInfo();
-
 	configureMotor(0);
-
 	tmc4671_EncoderInitializationMode0(0, 6000);
 
 	int ticks = 65535*20;
 	moveBy(0,&ticks);
 
-	updateCnt = 0;
 	// Main loop
 	while(1)
 	{
