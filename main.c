@@ -10,6 +10,8 @@
 #include "tmc/ic/TMC4671/TMC4671.h"
 #include "tmc/ramp/LinearRamp.h"
 
+#include "TMC-API/tmc/helpers/Functions.h"
+
 #include "tmc/TMCL.h"
 
 #include <string.h>
@@ -1361,6 +1363,24 @@ static void periodicJob_InMain(uint32 actualSystick)
 
 		HAL.IOs->config->setHigh(&HAL.IOs->pins->DIO19);
 
+		//only for time testing......
+		int isqrt = tmc_sqrti(0x40000001);
+
+		HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
+
+		isqrt = tmc_sqrti(0x4001);
+
+		HAL.IOs->config->setHigh(&HAL.IOs->pins->DIO19);
+
+		int actPos = tmc4671_readInt(0, TMC4671_PID_POSITION_ACTUAL);
+
+		HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
+
+		actPos = tmc4671_readInt(0, TMC4671_PID_POSITION_ACTUAL);
+		//only for time testing......
+
+		HAL.IOs->config->setHigh(&HAL.IOs->pins->DIO19);
+
 		// do velocity / position ramping for every motor
 		for (motor = 0; motor < TMC4671_MOTORS; motor++)
 		{
@@ -1394,6 +1414,7 @@ static void periodicJob_InMain(uint32 actualSystick)
 		}
 		lastSystick = actualSystick;
 
+		//HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
 		HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
 	}
 }
@@ -1662,6 +1683,7 @@ int main(void)
 	HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
 
 	TMC4671_init();
+
 	configureMotor(0);
 	tmc4671_EncoderInitializationMode0(0, 6000);
 
