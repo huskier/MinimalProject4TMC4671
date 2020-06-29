@@ -1502,8 +1502,8 @@ void TMC4671_init(void)
 	HAL.IOs->config->toOutput(PIN_DRV_ENN);
 	HAL.IOs->config->setHigh(PIN_DRV_ENN);
 
-	TMC4671_SPIChannel = &HAL.SPI->ch1;
-	TMC4671_SPIChannel->CSN = &HAL.IOs->pins->SPI1_CSN;
+	TMC4671_SPIChannel = &HAL.SPI->ch2;
+	TMC4671_SPIChannel->CSN = &HAL.IOs->pins->SPI2_CSN1;
 
 	int motor;
 
@@ -1682,8 +1682,25 @@ int main(void)
 
 	HAL.IOs->config->setLow(&HAL.IOs->pins->DIO19);
 
+	//TMC4671_init();
+
+	dispString("Before init......");
+
 	TMC4671_init();
 
+	dispString("After init......");
+
+	readChipInfo();
+
+	// Main loop
+	while(1)
+	{
+		wait(5000);
+		readChipInfo();
+	}
+
+
+/*
 	configureMotor(0);
 	tmc4671_EncoderInitializationMode0(0, 6000);
 
@@ -1695,6 +1712,7 @@ int main(void)
 	{
 		periodicJob_InMain(systick_getTick());
 	}
+*/
 
 	return 0;
 }
